@@ -18,14 +18,14 @@ public final class Constants {
   }
 
   public static class ClimberConstants {
-    // XRP motor channel 2 is the "Motor 3" port on the board. Its built-in
-    // encoder is wired to DIO 8/9.
-    public static final int kMotorChannel = 2;
-    public static final int kEncoderChannelA = 8;
-    public static final int kEncoderChannelB = 9;
+    // XRP motor channel 3 is the "Motor 4" port on the board. Its built-in
+    // encoder is wired to DIO 10/11.
+    public static final int kMotorChannel = 3;
+    public static final int kEncoderChannelA = 10;
+    public static final int kEncoderChannelB = 11;
 
     // Flip this if positive output drives the climber the wrong way
-    public static final boolean kMotorInverted = false;
+    public static final boolean kMotorInverted = true;
 
     // Standard XRP motor: 12 counts per motor rev * 48.75:1 gearbox
     public static final double kCountsPerRevolution = 585.0;

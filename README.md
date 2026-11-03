@@ -32,10 +32,10 @@ The XRP board has four motor ports. Two of them are already used by the wheels:
 |-------------------|------------------------|----------|
 | Motor L | 0 | Left wheel |
 | Motor R | 1 | Right wheel |
-| **Motor 3** | **2** | **Climber** ← new! |
-| Motor 4 | 3 | (free) |
+| Motor 3 | 2 | (free) |
+| **Motor 4** | **3** | **Climber** ← new! |
 
-> **Why is "Motor 3" channel 2?** Programmers usually start counting at **0**, not 1. The first motor is 0, the second is 1, and the third is 2.
+> **Why is "Motor 4" channel 3?** Programmers usually start counting at **0**, not 1. The first motor is 0, the second is 1, the third is 2, and the fourth is 3.
 
 Each XRP motor also has an **encoder**, a sensor that counts how far the motor has turned. We use it to see how far the climber has moved.
 
@@ -89,7 +89,7 @@ public void periodic() {
 We added a section called `ClimberConstants`. **Constants** are settings that don't change while the robot runs. We keep them in one place so they're easy to find and change.
 
 ```java
-public static final int kMotorChannel = 2;
+public static final int kMotorChannel = 3;
 public static final boolean kMotorInverted = false;
 public static final double kClimbUpSpeed = 1.0;
 public static final double kClimbDownSpeed = -0.5;
@@ -133,7 +133,7 @@ You can change all of these in `Constants.java` → `ClimberConstants`:
 | Pressing Y makes the climber go **down** | Set `kMotorInverted` to `true` |
 | The climber is too fast or too slow going up | Change `kClimbUpSpeed` (keep it between `0.0` and `1.0`) |
 | The climber is too fast or too slow going down | Change `kClimbDownSpeed` (keep it between `-1.0` and `0.0`) |
-| You plugged the motor into **Motor 4** instead | Set `kMotorChannel = 3`, `kEncoderChannelA = 10`, `kEncoderChannelB = 11` |
+| You move the motor to the **Motor 3** port | Set `kMotorChannel = 2`, `kEncoderChannelA = 8`, `kEncoderChannelB = 9` |
 
 **Change one thing at a time**, then test. That way, if something breaks, you know what caused it.
 

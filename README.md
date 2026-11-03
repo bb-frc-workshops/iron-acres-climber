@@ -90,7 +90,7 @@ We added a section called `ClimberConstants`. **Constants** are settings that do
 
 ```java
 public static final int kMotorChannel = 3;
-public static final boolean kMotorInverted = false;
+public static final boolean kMotorInverted = true;
 public static final double kClimbUpSpeed = 1.0;
 public static final double kClimbDownSpeed = -0.5;
 ```
@@ -130,7 +130,7 @@ You can change all of these in `Constants.java` → `ClimberConstants`:
 
 | If this happens… | Change this |
 |------------------|-------------|
-| Pressing Y makes the climber go **down** | Set `kMotorInverted` to `true` |
+| Pressing Y makes the climber go **down** | Flip `kMotorInverted` (`true` ↔ `false`) |
 | The climber is too fast or too slow going up | Change `kClimbUpSpeed` (keep it between `0.0` and `1.0`) |
 | The climber is too fast or too slow going down | Change `kClimbDownSpeed` (keep it between `-1.0` and `0.0`) |
 | You move the motor to the **Motor 3** port | Set `kMotorChannel = 2`, `kEncoderChannelA = 8`, `kEncoderChannelB = 9` |

@@ -278,6 +278,35 @@ new JoystickButton(m_controller, 3).whileTrue(m_climber.climbDownCommand());
 > m_controller.x().whileTrue(m_climber.climbDownCommand());
 > ```
 
+#### Why this looks different from the lifter
+
+If you've added the [lifter from the High Goal robot](https://github.com/bb-frc-workshops/iron-acres-high-goal) before, you'll notice its buttons are connected differently:
+
+```java
+// Climber
+new JoystickButton(m_controller, 4).whileTrue(m_climber.climbUpCommand());   // uses startEnd
+
+// Lifter
+new POVButton(m_controller, 0)
+    .onTrue(new InstantCommand(() -> m_lifter.setAngle(Lifter.kUpAngleDeg), m_lifter));
+```
+
+This is because a motor and a servo need different instructions:
+
+- **The climber uses a motor, which keeps spinning until it's told to stop.** If the climber used an `InstantCommand` (a command that runs once and finishes right away) to set the speed, the motor would keep spinning after you let go. So the climber uses `startEnd`, which does one job when the command starts (spin the motor) and another when it ends (stop the motor). `whileTrue` keeps the command running only while the button is held, so releasing the button ends the command and stops the motor.
+- **The lifter uses a servo, which holds its own position.** You tell it an angle once, and it moves there and stays there by itself. The command only has to send that one instruction, so an `InstantCommand` is enough. `onTrue` runs it once when the button is pressed. After that, the command is done, but the servo keeps holding the angle.
+
+| | Climber (motor) | Lifter (servo) |
+|---|---|---|
+| What you tell it | *How fast* to spin (a speed) | *Where* to go (an angle) |
+| What happens on its own afterwards | Keeps spinning | Stays at that angle |
+| Command | `startEnd`: start spinning, then stop at the end | `InstantCommand`: send the angle once |
+| Binding | `whileTrue`: run while held, end when released | `onTrue`: run once when pressed |
+
+A good rule to remember: if a mechanism keeps going until you stop it, your command must also handle stopping it. If it holds itself in place once it gets there, one instruction is enough.
+
+You may also notice that the climber needed a step to add settings to `Constants.java`, while the lifter didn't. The lifter only has two settings (its up and down angles), so they live right inside `Lifter.java`. The climber has more: a motor port, two encoder pins, a direction, and two speeds. Keeping them together in `Constants.java` makes them easy to find and change in one place.
+
 ### Step 5: Test it
 
 1. Build your code (see [Building from a terminal](#building-from-a-terminal)) and fix any red underlines.

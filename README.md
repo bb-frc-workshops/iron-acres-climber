@@ -192,6 +192,103 @@ The climber doesn't stop on its own at the top or bottom. Try fixing that:
 
 ---
 
+## Adding the climber to your own project
+
+Already have your own XRP robot project, like one from another workshop? You can add this climber to it without starting over. You'll copy one file, paste in some settings, and connect two buttons.
+
+### Before you start
+
+Check that the climber won't clash with anything your robot already uses:
+
+- **Motor 4 port:** the climber uses motor channel `3`. Search your code for `new XRPMotor(3)`. If something else already uses it, plug the climber into a free port and use that port's numbers from the [port numbers table](#port-numbers).
+- **Encoder pins 10 and 11:** search for `new Encoder(10, 11)`. These pins belong to the Motor 4 port, so they'll only be taken if Motor 4 is.
+- **The X and Y buttons:** check `configureButtonBindings()` in your `RobotContainer.java`. If X or Y already does something, pick different buttons in step 4.
+
+Then plug the climber motor into the **Motor 4** port on the XRP.
+
+### Step 1: Copy the subsystem
+
+Copy [`src/main/java/frc/robot/subsystems/Climber.java`](src/main/java/frc/robot/subsystems/Climber.java) into the `subsystems` folder of your project.
+
+Open it and check the first line of code:
+
+```java
+package frc.robot.subsystems;
+```
+
+This must match the folder the file is in. If your project uses the standard WPILib layout, it already does. If you get errors about the package, compare it with the first line of your own `Drivetrain.java` and make them match.
+
+### Step 2: Add the climber settings
+
+`Climber.java` reads its settings from `Constants.java`. Open **your** `Constants.java` and paste this block inside `public final class Constants { ... }`, next to any other `static class` blocks:
+
+```java
+  public static class ClimberConstants {
+    // XRP motor channel 3 is the "Motor 4" port on the board. Its built-in
+    // encoder is wired to DIO 10/11.
+    public static final int kMotorChannel = 3;
+    public static final int kEncoderChannelA = 10;
+    public static final int kEncoderChannelB = 11;
+
+    // Flip this if positive output drives the climber the wrong way
+    public static final boolean kMotorInverted = true;
+
+    // Standard XRP motor: 12 counts per motor rev * 48.75:1 gearbox
+    public static final double kCountsPerRevolution = 585.0;
+
+    public static final double kClimbUpSpeed = 1.0;
+    public static final double kClimbDownSpeed = -0.5;
+  }
+```
+
+> Watch the curly braces `{ }`. Every `{` needs a matching `}`. If VS Code underlines something in red after you paste, a brace is probably missing or extra.
+
+### Step 3: Create the climber
+
+Open your `RobotContainer.java`. Near the top, with the other `import` lines, add:
+
+```java
+import frc.robot.subsystems.Climber;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+```
+
+(If an import is already there, you don't need to add it twice.)
+
+Then, next to where your other subsystems are created (look for lines like `new Drivetrain()`), add:
+
+```java
+private final Climber m_climber = new Climber();
+```
+
+### Step 4: Connect the buttons
+
+Still in `RobotContainer.java`, inside `configureButtonBindings()`, add:
+
+```java
+// Climber: hold Y (button 4) to climb up, hold X (button 3) to lower
+new JoystickButton(m_controller, 4).whileTrue(m_climber.climbUpCommand());
+new JoystickButton(m_controller, 3).whileTrue(m_climber.climbDownCommand());
+```
+
+`m_controller` is the name of the controller in this project. If yours has a different name, like `m_joystick`, use that instead. To use different buttons, change the `4` and `3`. On an Xbox controller, A is 1, B is 2, X is 3, Y is 4, left bumper is 5, and right bumper is 6.
+
+> **Using `CommandXboxController`?** Some projects create the controller with `new CommandXboxController(0)` instead of `new Joystick(0)`. If yours does, skip the `JoystickButton` import and write the bindings like this instead:
+> ```java
+> m_controller.y().whileTrue(m_climber.climbUpCommand());
+> m_controller.x().whileTrue(m_climber.climbDownCommand());
+> ```
+
+### Step 5: Test it
+
+1. Build your code (see [Building from a terminal](#building-from-a-terminal)) and fix any red underlines.
+2. Run the code and enable **Teleoperated**.
+3. Tap **Y** briefly. The climber should move **up**. If it moves down, flip `kMotorInverted` in your `Constants.java`.
+4. Check that **Climber Position (revs)** changes on the dashboard as the climber moves. If it stays at 0, double-check the encoder numbers in step 2.
+
+Start with short taps. The climber has no automatic stop, so let go before it reaches the end.
+
+---
+
 ## Learn more
 
 - [WPILib documentation](https://docs.wpilib.org/en/stable/): the main reference

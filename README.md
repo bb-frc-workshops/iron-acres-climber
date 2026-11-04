@@ -6,6 +6,12 @@ If you're new to robot programming, start here. This page covers what the robot 
 
 **Build the robot:** The 3D-printable parts for the climber are on Printables: [XBS Climber](https://www.printables.com/model/1676140-xbs-climber).
 
+<p align="center">
+  <a href="https://www.printables.com/model/1676140-xbs-climber">
+    <img src="docs/images/climber.webp" alt="The XRP robot with the 3D-printed climber, its hooks resting on a horizontal bar" width="500">
+  </a>
+</p>
+
 ---
 
 ## What the robot can do
